@@ -1,6 +1,5 @@
 #include <iostream>
 #include <chrono>
-#include <vector>
 
 using namespace std;
 using namespace std::chrono;
@@ -59,17 +58,23 @@ void test_queue_operations(size_t max_operations) {
     int* data;
     queue_new(read, write, data, capacity);
 
-    vector<long long> push_times, poll_times;
-    vector<size_t> operation_counts;
+    // Определяем максимальное количество операций для массивов
+    const size_t max_ops_count = 20; // Достаточно для 1..1M операций (2^20)
+    long long push_times[max_ops_count] = {0};
+    long long poll_times[max_ops_count] = {0};
+    size_t operation_counts[max_ops_count] = {0};
+    size_t op_index = 0;
 
-    for (size_t ops = 1; ops <= max_operations; ops *= 2) {
+    for (size_t ops = 1; ops <= max_operations && op_index < max_ops_count; ops *= 2) {
+        operation_counts[op_index] = ops;
+
         // Тест операции push
         auto start = high_resolution_clock::now();
         for (size_t i = 0; i < ops; ++i) {
             queue_push(read, write, data, capacity, i);
         }
         auto end = high_resolution_clock::now();
-        push_times.push_back(duration_cast<microseconds>(end - start).count());
+        push_times[op_index] = duration_cast<microseconds>(end - start).count();
 
         // Тест операции poll
         start = high_resolution_clock::now();
@@ -78,24 +83,24 @@ void test_queue_operations(size_t max_operations) {
             queue_poll(read, write, data, capacity, element);
         }
         end = high_resolution_clock::now();
-        poll_times.push_back(duration_cast<microseconds>(end - start).count());
+        poll_times[op_index] = duration_cast<microseconds>(end - start).count();
 
-        operation_counts.push_back(ops);
+        op_index++;
     }
 
     queue_del(data);
 
-    // вывод результатов 
+    // Вывод результатов
     cout << endl << "operation_counts:" << endl;
-    for (size_t i = 0; i < operation_counts.size(); ++i) {
+    for (size_t i = 0; i < op_index; ++i) {
         cout << operation_counts[i] << " ";
     }
     cout << endl << "push_times:" << endl;
-    for (size_t i = 0; i < operation_counts.size(); ++i) {
+    for (size_t i = 0; i < op_index; ++i) {
         cout << push_times[i] << " ";
     }
     cout << endl << "poll_times:" << endl;
-    for (size_t i = 0; i < operation_counts.size(); ++i) {
+    for (size_t i = 0; i < op_index; ++i) {
         cout << poll_times[i] << " ";
     }
 }
