@@ -16,8 +16,10 @@ plt.scatter(x_values, y_values_1, color='blue', label='График Метод1'
 plt.scatter(x_values, y_values_2, color='red', label='График Метод2')
 plt.scatter(x_values, y_values_3, color='green', label='График Метод3')
 
-plt.yscale('log')
-plt.xscale('log')
+plt.yscale('log') # логарифмическая шкала по y 
+plt.xscale('log') # логарифмическая шкала по x
+
+
 plt.xlabel('Ось N')
 plt.ylabel('Ось t')
 plt.title('Сравнение методов 1-3')
