@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
-#include <fstream>
 #include <cmath>
 
 using namespace std;
@@ -56,16 +55,6 @@ long long measure_time(Func func, int size) {
     return duration_cast<microseconds>(stop - start).count();
 }
 
-// Функция для записи результатов в файл
-void write_results(const vector<int>& sizes, const vector<long long>& times1,
-    const vector<long long>& times2, const vector<long long>& times3) {
-    ofstream out("results.csv");
-    out << "Size,Strategy1,Strategy2,Strategy3\n";
-    for (size_t i = 0; i < sizes.size(); ++i) {
-        out << sizes[i] << "," << times1[i] << "," << times2[i] << "," << times3[i] << "\n";
-    }
-    out.close();
-}
 
 int main() {
     // Размеры массивов для тестирования (в логарифмической шкале)
@@ -83,10 +72,23 @@ int main() {
         times3.push_back(measure_time(test_strategy3, size));
         cout << "Size: " << size << " - done\n";
     }
+  
+    cout << endl << "Pa3mepb| :" << endl;
+    for (int i = 0; i < sizes.size(); i++) {
+        cout << sizes[i] <<" ";
+    }
+    cout << endl << "Metod 1 :" << endl;
+    for (int i = 0; i < sizes.size(); i++) {
+        cout << times1[i] << " ";
+    }
+    cout << endl << "Metod 2 :" << endl;
+    for (int i = 0; i < sizes.size(); i++) {
+        cout << times2[i] << " ";
+    }
+    cout << endl << "Metod 3 :" << endl;
+    for (int i = 0; i < sizes.size(); i++) {
+        cout << times3[i] << " ";
+    }
+    cout << endl << endl;
 
-    // Записываем результаты в файл
-    write_results(sizes, times1, times2, times3);
-
-    cout << "Results saved to results.csv\n";
-    return 0;
 }
